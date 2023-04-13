@@ -1,12 +1,10 @@
 import express from 'express';
-import movieList from '../../dist/src/data/movieList.json';
+
+import { getMovieDetails, getMovies } from '../controllers/movies.controller';
 
 const router = express.Router();
 
-const movies = movieList.movies;
-
-router.route('/').get((_req, res) => {
-  res.json(movies);
-});
+router.route('/').get(getMovies);
+router.route('/:movieId').get(getMovieDetails);
 
 export default router;
