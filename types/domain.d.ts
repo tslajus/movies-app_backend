@@ -105,6 +105,11 @@ interface MovieDetails extends Movie {
   voteCount: number;
 }
 
+interface CachedMovieDetails {
+  movieId: string;
+  movieDetails: MovieDetails;
+}
+
 interface Movies {
   page: number;
   totalPages: number;

@@ -2,18 +2,17 @@ import express from 'express';
 import axios from 'axios';
 import { movieConverter } from '../converters/movie.converter';
 
-import movie from '../../dist/src/data/movie.json';
-
 let cachedMovies: Movies;
 
 const getMovies = async (_req: express.Request, res: express.Response): Promise<express.Response> => {
   try {
     if (cachedMovies) {
-      console.log('Returning movies from cache');
       return res.json(cachedMovies);
     }
 
-    const response = await axios.get(`${process.env.BASE_URL}${process.env.API_KEY}`);
+    const response = await axios.get(
+      `${process.env.BASE_URL}/3/discover/movie?sort_by=popularity.desc&page=1&vote_count.gte=1000&api_key=${process.env.API_KEY_MOVIES}`,
+    );
     const tmdbMovies = response.data.results;
     const movies: Movies = {
       page: 1,
@@ -22,7 +21,6 @@ const getMovies = async (_req: express.Request, res: express.Response): Promise<
     };
 
     cachedMovies = movies;
-    console.log('Returning movies from API');
 
     return res.json(movies);
   } catch (error) {
@@ -31,9 +29,4 @@ const getMovies = async (_req: express.Request, res: express.Response): Promise<
   }
 };
 
-const getMovieDetails = (_req: express.Request, res: express.Response): void => {
-  const movieDetails: MovieDetails = movie;
-  res.json(movieDetails);
-};
-
-export { getMovies, getMovieDetails };
+export { getMovies };
