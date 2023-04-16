@@ -5,7 +5,7 @@ import { movieConverter } from '../converters/movie.converter';
 const cachedMovies: Record<number, Movies> = {};
 
 const getMovies = async (req: express.Request, res: express.Response): Promise<express.Response> => {
-  const page = parseInt(req.query.page as string, 10) || 1;
+  const page = parseInt(req.query.page as string, 10 || 1);
 
   try {
     const cachedMoviesPage = cachedMovies[page];
@@ -19,7 +19,7 @@ const getMovies = async (req: express.Request, res: express.Response): Promise<e
     );
     const tmdbMovies = response.data.results;
     const movies: Movies = {
-      page,
+      page: page,
       totalPages: response.data.total_pages,
       movies: tmdbMovies.map(movieConverter),
     };
