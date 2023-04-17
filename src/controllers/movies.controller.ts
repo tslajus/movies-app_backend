@@ -1,16 +1,32 @@
 import express from 'express';
 import axios from 'axios';
+import { validationResult } from 'express-validator';
+import { titleValidator } from '../validators/title.validator';
 import { movieConverter } from '../converters/movie.converter';
+import { searchMoviesByTitle } from '../services/movie.service';
 
 const cachedMovies: Record<number, Movies> = {};
 
 const getMovies = async (req: express.Request, res: express.Response): Promise<express.Response> => {
-  const page = parseInt(req.query.page as string, 10 || 1);
+  const page = parseInt(req.query.page as string, 10) || 1;
+  const title = req.query.title as string;
+
+  if (title) {
+    await Promise.all(titleValidator.map((validator) => validator.run(req)));
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const movies = await searchMoviesByTitle({ title, page });
+    return res.json(movies);
+  }
 
   try {
     const cachedMoviesPage = cachedMovies[page];
 
-    if (cachedMoviesPage) {
+    if (cachedMoviesPage && !title) {
       return res.json(cachedMoviesPage);
     }
 

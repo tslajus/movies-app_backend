@@ -141,3 +141,8 @@ interface PaginatedMovies {
   docs: Movie[];
   totalPages: number;
 }
+
+interface SearchMoviesByTitleParams {
+  title: string;
+  page: number;
+}

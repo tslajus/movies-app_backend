@@ -1,5 +1,5 @@
 import express from 'express';
-import pageValidationRules from './page.validator';
+import pageValidationRules from '../validators/page.validator';
 
 import { getMovies } from '../controllers/movies.controller';
 
