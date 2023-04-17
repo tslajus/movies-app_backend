@@ -1,5 +1,5 @@
 import { query } from 'express-validator';
 
-const pageValidationRules = [query('page').optional().isInt({ min: 1 }).toInt()];
+const pageValidator = [query('page').optional().isInt({ min: 1 }).toInt()];
 
-export default pageValidationRules;
+export default pageValidator;

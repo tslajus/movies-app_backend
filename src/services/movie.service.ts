@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { movieConverter } from '../converters/movie.converter';
 
-async function searchMoviesByTitle({ title, page }: SearchMoviesByTitleParams) {
+const searchMoviesByTitle = async ({ title, page }: SearchMoviesByTitleParams) => {
   const url = `${process.env.BASE_URL}/3/search/movie?query=${title}&page=${page}&api_key=${process.env.API_KEY}`;
 
   const response = await axios.get(url);
@@ -9,6 +9,6 @@ async function searchMoviesByTitle({ title, page }: SearchMoviesByTitleParams) {
   const movies = tmdbMovies.map(movieConverter);
 
   return movies;
-}
+};
 
 export { searchMoviesByTitle };

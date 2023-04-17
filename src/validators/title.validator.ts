@@ -6,4 +6,4 @@ const titleValidator = [
     .withMessage('Title can only contain letters, numbers, spaces, dashes, and dots'),
 ];
 
-export { titleValidator };
+export default titleValidator;
