@@ -31,7 +31,7 @@ const getMovies = async (req: express.Request, res: express.Response): Promise<e
     }
 
     const response = await axios.get(
-      `${process.env.BASE_URL}/3/discover/movie?sort_by=popularity.desc&page=${page}&vote_count.gte=1000&api_key=${process.env.API_KEY_MOVIES}`,
+      `${process.env.BASE_URL}/3/discover/movie?sort_by=popularity.desc&page=${page}&vote_count.gte=1000&api_key=${process.env.API_KEY}`,
     );
     const tmdbMovies = response.data.results;
     const movies: Movies = {
