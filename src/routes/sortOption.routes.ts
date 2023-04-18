@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { getSortOptions } from '../controllers/sortOption.controller';
+import { getSortOptions } from '../controllers';
 
 const router = express.Router();
 

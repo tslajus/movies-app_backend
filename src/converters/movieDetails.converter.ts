@@ -73,4 +73,4 @@ const movieDetailsConverter = (tmbdMovieDetails: TmdbMovieDetails): MovieDetails
   return movieDetails;
 };
 
-export { movieDetailsConverter };
+export default movieDetailsConverter;

@@ -1,10 +1,9 @@
 import express from 'express';
 import axios from 'axios';
-import { validationResult } from 'express-validator';
+import { validateRequest } from '../commons';
 import { titleValidator, genreValidator, sortOptionValidator } from '../validators';
-import { movieConverter } from '../converters/movie.converter';
-import { searchMoviesByTitle } from '../services/movie.service';
-import { searchMoviesByGenre } from '../services/genre.service';
+import { movieConverter } from '../converters';
+import { searchMoviesByTitle, searchMoviesByGenre } from '../services';
 
 const cachedMovies: Record<number, Movies> = {};
 
@@ -15,24 +14,19 @@ const getMovies = async (req: express.Request, res: express.Response): Promise<e
   const sort = req.query.sort as string;
 
   if (title) {
-    await Promise.all(titleValidator.map((validator) => validator.run(req)));
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+    const titleError = await validateRequest(titleValidator, req);
+    if (titleError) {
+      return res.status(400).json(titleError);
     }
-
     const movies = await searchMoviesByTitle({ title, page });
     return res.json(movies);
   }
 
   if (genres) {
-    await Promise.all(genreValidator.map((validator) => validator.run(req)));
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+    const genreError = await validateRequest(genreValidator, req);
+    if (genreError) {
+      return res.status(400).json(genreError);
     }
-
     const movies = await searchMoviesByGenre({ genres, page });
     return res.json(movies);
   }
@@ -45,6 +39,7 @@ const getMovies = async (req: express.Request, res: express.Response): Promise<e
     }
 
     let url = `${process.env.BASE_URL}/3/discover/movie?sort_by=popularity.desc&page=${page}&vote_count.gte=1000&api_key=${process.env.API_KEY}`;
+
     if (sort) {
       const isValidSortOption = sortOptionValidator(sort);
       if (!isValidSortOption) {
@@ -73,4 +68,4 @@ const getMovies = async (req: express.Request, res: express.Response): Promise<e
   }
 };
 
-export { getMovies };
+export default getMovies;

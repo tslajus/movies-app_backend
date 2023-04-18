@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { movieConverter } from '../converters/movie.converter';
+import { movieConverter } from '../converters';
 
 const searchMoviesByGenre = async ({ genres, page }: { genres: string; page: number }): Promise<Movies> => {
   try {
@@ -20,4 +20,4 @@ const searchMoviesByGenre = async ({ genres, page }: { genres: string; page: num
   }
 };
 
-export { searchMoviesByGenre };
+export default searchMoviesByGenre;

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { movieConverter } from '../converters/movie.converter';
+import { movieConverter } from '../converters';
 
 const searchMoviesByTitle = async ({ title, page }: SearchMoviesByTitleParams) => {
   const url = `${process.env.BASE_URL}/3/search/movie?query=${title}&page=${page}&api_key=${process.env.API_KEY}`;
@@ -11,4 +11,4 @@ const searchMoviesByTitle = async ({ title, page }: SearchMoviesByTitleParams) =
   return movies;
 };
 
-export { searchMoviesByTitle };
+export default searchMoviesByTitle;

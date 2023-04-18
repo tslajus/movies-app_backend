@@ -1,6 +1,6 @@
 import express from 'express';
 import axios from 'axios';
-import { movieDetailsConverter } from '../converters/movieDetails.converter';
+import { movieDetailsConverter } from '../converters';
 
 const cachedMovieDetails: CachedMovieDetails[] = [];
 
@@ -31,4 +31,4 @@ const getMovieDetails = async (req: express.Request, res: express.Response): Pro
   }
 };
 
-export { getMovieDetails };
+export default getMovieDetails;

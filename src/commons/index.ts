@@ -22,6 +22,15 @@ export const validate = (validations: ValidationChain[]) => {
   };
 };
 
+export const validateRequest = async (validation: ValidationChain[], req: express.Request) => {
+  await Promise.all(validation.map((validator) => validator.run(req)));
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return { error: errors.array() };
+  }
+  return null;
+};
+
 export const isLambdaRuntime = (): boolean => !!process.env.AWS_LAMBDA_FUNCTION_NAME;
 
 export const connectToMongoDb = (): void => {

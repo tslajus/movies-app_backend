@@ -22,4 +22,4 @@ const movieConverter = (tmdbMovie: TmdbMovie): Movie => {
   return movie;
 };
 
-export { movieConverter };
+export default movieConverter;

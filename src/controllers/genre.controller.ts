@@ -21,4 +21,4 @@ const getGenre = async (_req: express.Request, res: express.Response): Promise<e
   }
 };
 
-export { getGenre };
+export default getGenre;

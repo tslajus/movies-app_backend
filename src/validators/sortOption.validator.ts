@@ -1,4 +1,4 @@
-import { sortOptionService } from '../services/sortOption.service';
+import { sortOptionService } from '../services';
 
 const sortOptionValidator = (sortOption: string): boolean => {
   const validSortOptions = sortOptionService().map((option) => option.code);

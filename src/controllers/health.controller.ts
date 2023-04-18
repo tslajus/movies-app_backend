@@ -7,4 +7,4 @@ const getHealth = (_req: express.Request, res: express.Response): void => {
   });
 };
 
-export { getHealth };
+export default getHealth;

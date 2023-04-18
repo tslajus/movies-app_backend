@@ -4,4 +4,4 @@ const sortOptionService = (): SortOption[] => {
   return sortOptions;
 };
 
-export { sortOptionService };
+export default sortOptionService;

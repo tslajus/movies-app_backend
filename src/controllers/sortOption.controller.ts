@@ -1,5 +1,5 @@
 import express from 'express';
-import { sortOptionService } from '../services/sortOption.service';
+import { sortOptionService } from '../services';
 
 const getSortOptions = async (_req: express.Request, res: express.Response): Promise<express.Response> => {
   try {
@@ -11,4 +11,4 @@ const getSortOptions = async (_req: express.Request, res: express.Response): Pro
   }
 };
 
-export { getSortOptions };
+export default getSortOptions;

@@ -1,4 +1,4 @@
-import titleValidator from '../../src/validators/title.validator';
+import { titleValidator } from '../../src/validators';
 import { validationResult } from 'express-validator';
 
 describe('titleValidator', () => {

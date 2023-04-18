@@ -1,4 +1,4 @@
-import { genreValidator } from '../../src/validators/genre.validator';
+import { genreValidator } from '../../src/validators';
 import { validationResult } from 'express-validator';
 
 describe('genreValidator', () => {

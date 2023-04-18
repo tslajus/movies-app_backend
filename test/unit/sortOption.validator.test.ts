@@ -1,5 +1,5 @@
-import sortOptionValidator from '../../src/validators/sortOption.validator';
-import { sortOptionService } from '../../src/services/sortOption.service';
+import { sortOptionValidator } from '../../src/validators';
+import { sortOptionService } from '../../src/services';
 
 describe('validateSortOption function', () => {
   it('returns true for a valid sort option code', () => {
