@@ -1,7 +1,7 @@
 import express from 'express';
 import axios from 'axios';
 import { validationResult } from 'express-validator';
-import { titleValidator, genreValidator } from '../validators';
+import { titleValidator, genreValidator, sortOptionValidator } from '../validators';
 import { movieConverter } from '../converters/movie.converter';
 import { searchMoviesByTitle } from '../services/movie.service';
 import { searchMoviesByGenre } from '../services/genre.service';
@@ -12,6 +12,7 @@ const getMovies = async (req: express.Request, res: express.Response): Promise<e
   const page = parseInt(req.query.page as string, 10) || 1;
   const title = req.query.title as string;
   const genres = req.query.genres as string;
+  const sort = req.query.sort as string;
 
   if (title) {
     await Promise.all(titleValidator.map((validator) => validator.run(req)));
@@ -39,21 +40,31 @@ const getMovies = async (req: express.Request, res: express.Response): Promise<e
   try {
     const cachedMoviesPage = cachedMovies[page];
 
-    if (cachedMoviesPage && !title) {
+    if (cachedMoviesPage && !title && !sort) {
       return res.json(cachedMoviesPage);
     }
 
-    const response = await axios.get(
-      `${process.env.BASE_URL}/3/discover/movie?sort_by=popularity.desc&page=${page}&vote_count.gte=1000&api_key=${process.env.API_KEY}`,
-    );
+    let url = `${process.env.BASE_URL}/3/discover/movie?sort_by=popularity.desc&page=${page}&vote_count.gte=1000&api_key=${process.env.API_KEY}`;
+    if (sort) {
+      const isValidSortOption = sortOptionValidator(sort);
+      if (!isValidSortOption) {
+        return res.status(400).json({ error: 'Invalid sort option' });
+      }
+      url = `${process.env.BASE_URL}/3/discover/movie?sort_by=${sort}&with_genres=${genres}&page=${page}&vote_count.gte=1000&api_key=${process.env.API_KEY}`;
+    }
+
+    const response = await axios.get(url);
     const tmdbMovies = response.data.results;
+
     const movies: Movies = {
       page: page,
       totalPages: response.data.total_pages,
       movies: tmdbMovies.map(movieConverter),
     };
 
-    cachedMovies[page] = movies;
+    if (!title && !sort) {
+      cachedMovies[page] = movies;
+    }
 
     return res.json(movies);
   } catch (error) {
