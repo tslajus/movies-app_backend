@@ -3,7 +3,6 @@ import axios from 'axios';
 import { validateRequest } from '../commons';
 import { titleValidator, genreValidator, sortOptionValidator } from '../validators';
 import { movieConverter } from '../converters';
-import { searchMoviesByTitle, searchMoviesByGenre } from '../services';
 
 const cachedMovies: Record<number, Movies> = {};
 
@@ -13,13 +12,24 @@ const getMovies = async (req: express.Request, res: express.Response): Promise<e
   const genres = req.query.genres as string;
   const sort = req.query.sort as string;
 
-  if (title) {
+  let url = `${process.env.BASE_URL}/3/discover/movie?page=${page}&vote_count.gte=1000&api_key=${process.env.API_KEY}`;
+
+  if (title && !sort && !genres) {
     const titleError = await validateRequest(titleValidator, req);
     if (titleError) {
       return res.status(400).json(titleError);
     }
-    const movies = await searchMoviesByTitle({ title, page });
-    return res.json(movies);
+    url = `${process.env.BASE_URL}/3/search/movie?query=${title}&page=${page}&api_key=${process.env.API_KEY}`;
+  }
+
+  if (sort) {
+    const isValidSortOption = sortOptionValidator(sort);
+    if (!isValidSortOption) {
+      return res.status(400).json({ error: 'Invalid sort option' });
+    }
+    url += `&sort_by=${sort}`;
+  } else {
+    url += '&sort_by=popularity.desc';
   }
 
   if (genres) {
@@ -27,25 +37,14 @@ const getMovies = async (req: express.Request, res: express.Response): Promise<e
     if (genreError) {
       return res.status(400).json(genreError);
     }
-    const movies = await searchMoviesByGenre({ genres, page });
-    return res.json(movies);
+    url += `&with_genres=${genres}`;
   }
 
   try {
     const cachedMoviesPage = cachedMovies[page];
 
-    if (cachedMoviesPage && !title && !sort) {
+    if (cachedMoviesPage && !title && !sort && !genres) {
       return res.json(cachedMoviesPage);
-    }
-
-    let url = `${process.env.BASE_URL}/3/discover/movie?sort_by=popularity.desc&page=${page}&vote_count.gte=1000&api_key=${process.env.API_KEY}`;
-
-    if (sort) {
-      const isValidSortOption = sortOptionValidator(sort);
-      if (!isValidSortOption) {
-        return res.status(400).json({ error: 'Invalid sort option' });
-      }
-      url = `${process.env.BASE_URL}/3/discover/movie?sort_by=${sort}&with_genres=${genres}&page=${page}&vote_count.gte=1000&api_key=${process.env.API_KEY}`;
     }
 
     const response = await axios.get(url);
@@ -57,7 +56,7 @@ const getMovies = async (req: express.Request, res: express.Response): Promise<e
       movies: tmdbMovies.map(movieConverter),
     };
 
-    if (!title && !sort) {
+    if (!title && !sort && !genres) {
       cachedMovies[page] = movies;
     }
 
