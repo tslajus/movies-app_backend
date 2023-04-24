@@ -2,6 +2,7 @@ import { connectToMongoDb } from '../../src/commons';
 import supertest from 'supertest';
 import app from '../../src/app';
 import { UserModel } from '../../src/models/user';
+import mongoose from 'mongoose';
 
 beforeAll(async () => {
   await connectToMongoDb();
@@ -9,6 +10,10 @@ beforeAll(async () => {
 
 afterEach(async () => {
   await UserModel.deleteMany({ email: /@example.com$/ });
+});
+
+afterAll(async () => {
+  await mongoose.connection.close();
 });
 
 describe('SignUp API', () => {
@@ -21,7 +26,6 @@ describe('SignUp API', () => {
       };
 
       const response = await supertest(app).post('/sign-up').send(user);
-      console.log(response.body);
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('message', 'User created successfully');
