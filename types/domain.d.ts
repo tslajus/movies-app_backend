@@ -146,3 +146,9 @@ interface SearchMoviesByTitleParams {
   title: string;
   page: number;
 }
+
+declare namespace Express {
+  export interface Request {
+    currentUserEmail?: string;
+  }
+}
