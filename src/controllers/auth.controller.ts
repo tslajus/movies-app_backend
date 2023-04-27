@@ -27,7 +27,7 @@ const login = async (req: express.Request, res: express.Response): Promise<void>
     return;
   }
 
-  const token = jwt.sign({ currentUserEmail: email }, process.env.JWT_SECRET!, {
+  const token = jwt.sign({ currentUserEmail: email }, process.env.JWT_SECRET as string, {
     expiresIn: process.env.JWT_EXPIRATION,
   });
 

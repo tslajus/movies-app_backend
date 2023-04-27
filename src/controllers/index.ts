@@ -1,4 +1,4 @@
-export { default as addPersonalMovie } from './personalMovies.controller';
+export { addPersonalMovie, getPersonalMovies } from './personalMovies.controller';
 export { default as createUser } from './user.controller';
 export { default as getGenre } from './genre.controller';
 export { default as getHealth } from './health.controller';

@@ -6,7 +6,7 @@ import { sha256 } from 'js-sha256';
 import { connectToMongoDb } from '../../src/commons';
 import mongoose from 'mongoose';
 
-describe('Personal Movies API', () => {
+describe('Add Personal Movies API', () => {
   const existingUser = {
     name: 'Existing User',
     email: `eu-${Date.now()}@example.com`,
