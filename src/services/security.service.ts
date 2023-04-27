@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-export const authenticate = (req: Request, res: Response, next: NextFunction) => {
+const authenticate = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(' ')[1];
 
@@ -23,3 +23,5 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
     next();
   });
 };
+
+export default authenticate;

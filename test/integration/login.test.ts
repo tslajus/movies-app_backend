@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 describe('Login API', () => {
   const existingUser = {
     name: 'Existing User',
-    email: 'eu@example.com',
+    email: `eu-${Date.now()}@example.com`,
     password: 'Password1!',
   };
 
