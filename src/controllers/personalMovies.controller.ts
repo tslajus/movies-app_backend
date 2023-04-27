@@ -30,4 +30,21 @@ const getPersonalMovies = async (req: Request, res: Response) => {
   }
 };
 
-export { addPersonalMovie, getPersonalMovies };
+const deletePersonalMovie = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const userEmail = req.currentUserEmail;
+
+    const result = await Movie.deleteOne({ _id: id, email: userEmail });
+
+    if (result.deletedCount === 1) {
+      res.status(200).json({ success: true });
+    } else {
+      res.status(404).json({ success: false, message: 'Movie not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: (error as Error).message });
+  }
+};
+
+export { addPersonalMovie, getPersonalMovies, deletePersonalMovie };

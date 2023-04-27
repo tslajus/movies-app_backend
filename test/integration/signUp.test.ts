@@ -21,7 +21,7 @@ describe('SignUp API', () => {
     it('should create a new user with valid data', async () => {
       const user = {
         name: 'Test Name',
-        email: 'test@example.com',
+        email: `eu-${Date.now()}@example.com`,
         password: 'Password1!',
       };
 
