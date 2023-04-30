@@ -9,6 +9,7 @@ const MovieSchema = new mongoose.Schema({
   backdropPath: { type: String },
   posterPath: { type: String },
   voteAverage: { type: Number },
+  createdAt: { type: Date, default: Date.now },
 });
 
 MovieSchema.plugin(mongoosePaginate);
