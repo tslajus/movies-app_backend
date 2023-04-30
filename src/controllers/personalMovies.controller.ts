@@ -32,10 +32,10 @@ const getPersonalMovies = async (req: Request, res: Response) => {
 
 const deletePersonalMovie = async (req: Request, res: Response) => {
   try {
-    const id = req.params.id;
+    const movieId = req.params.id;
     const userEmail = req.currentUserEmail;
 
-    const result = await Movie.deleteOne({ _id: id, email: userEmail });
+    const result = await Movie.deleteOne({ movieId: movieId, email: userEmail });
 
     if (result.deletedCount === 1) {
       res.status(200).json({ success: true });

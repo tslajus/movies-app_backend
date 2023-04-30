@@ -33,7 +33,7 @@ app.use('/genres', genreRoutes);
 app.use('/sort-options', sortOptionsRoutes);
 app.use('/sign-up', userRoutes);
 app.use('/login', userLoginRoutes);
-app.use('/personal-movies', personalMoviesRoutes);
+app.use('/my-movies', personalMoviesRoutes);
 
 const errorLogger: ErrorRequestHandler = (err, _req, _res, next) => {
   console.error(err.stack);
