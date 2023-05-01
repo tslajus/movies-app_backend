@@ -2,8 +2,7 @@ import supertest from 'supertest';
 import app from '../../src/app';
 import { UserModel } from '../../src/models/user';
 import { sha256 } from 'js-sha256';
-import { connectToMongoDb } from '../../src/commons';
-import mongoose from 'mongoose';
+import '../testSetup';
 
 describe('Login API', () => {
   const existingUser = {
@@ -14,13 +13,11 @@ describe('Login API', () => {
 
   beforeAll(async () => {
     const encryptedPassword = sha256(existingUser.password);
-    await connectToMongoDb();
     await UserModel.create({ ...existingUser, password: encryptedPassword });
   });
 
   afterAll(async () => {
     await UserModel.deleteOne({ email: existingUser.email });
-    await mongoose.connection.close();
   });
 
   describe('POST /login', () => {

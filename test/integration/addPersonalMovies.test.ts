@@ -3,10 +3,9 @@ import app from '../../src/app';
 import { UserModel } from '../../src/models/user';
 import { Movie } from '../../src/models/movie';
 import { sha256 } from 'js-sha256';
-import { connectToMongoDb } from '../../src/commons';
-import mongoose from 'mongoose';
+import '../testSetup';
 
-describe('Add Personal Movies API', () => {
+describe('Add My Movies API', () => {
   const existingUser = {
     name: 'Existing User',
     email: `eu-${Date.now()}@example.com`,
@@ -21,17 +20,15 @@ describe('Add Personal Movies API', () => {
 
   beforeAll(async () => {
     const encryptedPassword = sha256(existingUser.password);
-    await connectToMongoDb();
     await UserModel.create({ ...existingUser, password: encryptedPassword });
   });
 
   afterAll(async () => {
     await UserModel.deleteOne({ email: existingUser.email });
     await Movie.deleteOne({ movieId: testMovie.movieId });
-    await mongoose.connection.close();
   });
 
-  describe('POST /personal-movies', () => {
+  describe('POST /my-movies', () => {
     it('should successfully create a movie', async () => {
       const loginResponse = await supertest(app)
         .post('/login')
@@ -39,10 +36,7 @@ describe('Add Personal Movies API', () => {
 
       const token = loginResponse.body.token;
 
-      const response = await supertest(app)
-        .post('/personal-movies')
-        .set('Authorization', `Bearer ${token}`)
-        .send(testMovie);
+      const response = await supertest(app).post('/my-movies').set('Authorization', `Bearer ${token}`).send(testMovie);
 
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty('message', 'Movie saved successfully');

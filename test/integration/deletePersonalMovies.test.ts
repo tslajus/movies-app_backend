@@ -3,10 +3,9 @@ import app from '../../src/app';
 import { UserModel } from '../../src/models/user';
 import { Movie } from '../../src/models/movie';
 import { sha256 } from 'js-sha256';
-import { connectToMongoDb } from '../../src/commons';
-import mongoose from 'mongoose';
+import '../testSetup';
 
-describe('Delete Personal Movies API', () => {
+describe('Delete My Movies API', () => {
   const existingUser = {
     name: 'Existing User',
     email: `eu-${Date.now()}@example.com`,
@@ -21,22 +20,20 @@ describe('Delete Personal Movies API', () => {
 
   let movieId: string;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const encryptedPassword = sha256(existingUser.password);
-    await connectToMongoDb();
     await UserModel.create({ ...existingUser, password: encryptedPassword });
 
     const movie = new Movie({ ...testMovie, email: existingUser.email });
     await movie.save();
-    movieId = movie._id;
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await UserModel.deleteOne({ email: existingUser.email });
-    await mongoose.connection.close();
+    await Movie.deleteOne({ movieId });
   });
 
-  describe('DELETE /personal-movies/:id', () => {
+  describe('DELETE /my-movies/:id', () => {
     it('should successfully delete a personal movie', async () => {
       const loginResponse = await supertest(app)
         .post('/login')
@@ -45,7 +42,7 @@ describe('Delete Personal Movies API', () => {
       const token = loginResponse.body.token;
 
       const response = await supertest(app)
-        .delete(`/personal-movies/${movieId}`)
+        .delete(`/my-movies/${testMovie.movieId}`)
         .set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(200);
@@ -60,8 +57,10 @@ describe('Delete Personal Movies API', () => {
       const token = loginResponse.body.token;
 
       const response = await supertest(app)
-        .delete(`/personal-movies/${new mongoose.Types.ObjectId()}`)
+        .delete(`/my-movies/${testMovie.movieId + 1}`)
         .set('Authorization', `Bearer ${token}`);
+
+      console.log('Response body:', response.body);
 
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty('success', false);
