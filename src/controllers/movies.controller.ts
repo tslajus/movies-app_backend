@@ -12,14 +12,14 @@ const getMovies = async (req: express.Request, res: express.Response): Promise<e
   const genres = req.query.genres as string;
   const sort = req.query.sort as string;
 
-  let url = `${process.env.BASE_URL}/3/discover/movie?page=${page}&vote_count.gte=1000&api_key=${process.env.API_KEY}`;
+  let url = `${process.env.BASEURL}/3/discover/movie?page=${page}&vote_count.gte=1000&api_key=${process.env.APIKEY}`;
 
   if (title && !sort && !genres) {
     const titleError = await validateRequest(titleValidator, req);
     if (titleError) {
       return res.status(400).json(titleError);
     }
-    url = `${process.env.BASE_URL}/3/search/movie?query=${title}&page=${page}&api_key=${process.env.API_KEY}`;
+    url = `${process.env.BASEURL}/3/search/movie?query=${title}&page=${page}&api_key=${process.env.APIKEY}`;
   }
 
   if (sort) {

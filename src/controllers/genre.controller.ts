@@ -9,7 +9,7 @@ const getGenre = async (_req: express.Request, res: express.Response): Promise<e
   }
 
   try {
-    const response = await axios.get(`${process.env.BASE_URL}/3/genre/movie/list?api_key=${process.env.API_KEY}`);
+    const response = await axios.get(`${process.env.BASEURL}/3/genre/movie/list?api_key=${process.env.APIKEY}`);
 
     const genres = response.data.genres;
     cachedGenres.push(...genres);

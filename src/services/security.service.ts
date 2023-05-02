@@ -9,10 +9,10 @@ const authenticate = (req: Request, res: Response, next: NextFunction) => {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const accessTokenSecret = process.env.JWT_SECRET as string;
+  const accessTokenSecret = process.env.JWTSECRET as string;
 
   if (!accessTokenSecret) {
-    throw new Error('JWT_SECRET environment variable is not defined');
+    throw new Error('JWTSECRET environment variable is not defined');
   }
 
   jwt.verify(token, accessTokenSecret, (err: jwt.VerifyErrors | null, decoded?: JwtPayload | string) => {

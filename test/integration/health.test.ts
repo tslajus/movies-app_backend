@@ -14,7 +14,7 @@ describe('Health API', () => {
   const request = supertest(app);
 
   beforeAll(async () => {
-    await mongoose.connect(process.env.MONGO_URL as string);
+    await mongoose.connect(process.env.MONGOURL as string);
   });
 
   afterAll(async () => {

@@ -43,8 +43,8 @@ export const connectToMongoDb = (): void => {
     useUnifiedTopology: true,
   };
 
-  if (process.env.MONGO_URL) {
-    mongoose.connect(process.env.MONGO_URL, connectionOptions);
+  if (process.env.MONGOURL) {
+    mongoose.connect(process.env.MONGOURL, connectionOptions);
   } else {
     console.error('Mongo URL not found');
   }

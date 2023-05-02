@@ -14,7 +14,7 @@ const getMovieDetails = async (req: express.Request, res: express.Response): Pro
         return res.json(cachedMovie.movieDetails);
       }
 
-      const response = await axios.get(`${process.env.BASE_URL}/3/movie/${movieId}?api_key=${process.env.API_KEY}`);
+      const response = await axios.get(`${process.env.BASEURL}/3/movie/${movieId}?api_key=${process.env.APIKEY}`);
       const tmdbMovieDetails = response.data;
       const movieDetails: MovieDetails = movieDetailsConverter(tmdbMovieDetails);
 
