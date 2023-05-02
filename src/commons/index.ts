@@ -12,6 +12,8 @@ export const CORS = (_req: express.Request, res: express.Response, next: express
   next();
 };
 
+export const allowedOrigins = ['http://localhost:3000', 'https://my-movies-app.onrender.com'];
+
 export const validate = (validations: ValidationChain[]) => {
   return async (req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
     await Promise.all(validations.map((validation) => validation.run(req)));

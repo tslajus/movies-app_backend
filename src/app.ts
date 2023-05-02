@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import sanitize from 'express-mongo-sanitize';
 import cors from 'cors';
 
-import { connectToMongoDb, isLambdaRuntime } from './commons';
+import { connectToMongoDb, isLambdaRuntime, allowedOrigins } from './commons';
 import healthRoutes from './routes/health.routes';
 import moviesRoutes from './routes/movies.routes';
 import movieDetailsRoutes from './routes/movieDetails.routes';
@@ -24,8 +24,19 @@ const app = express();
 
 app.use(helmet());
 app.use(json());
-app.use(cors());
 app.use(sanitize());
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const msg = 'The CORS policy for this site does not ' + 'allow access from the specified Origin.';
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
+  }),
+);
 
 app.use('/health', healthRoutes);
 app.use('/movies', moviesRoutes);
