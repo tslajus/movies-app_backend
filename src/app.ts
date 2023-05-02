@@ -2,8 +2,9 @@ import express, { ErrorRequestHandler, json } from 'express';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 import sanitize from 'express-mongo-sanitize';
+import cors from 'cors';
 
-import { connectToMongoDb, CORS, isLambdaRuntime } from './commons';
+import { connectToMongoDb, isLambdaRuntime } from './commons';
 import healthRoutes from './routes/health.routes';
 import moviesRoutes from './routes/movies.routes';
 import movieDetailsRoutes from './routes/movieDetails.routes';
@@ -23,7 +24,7 @@ const app = express();
 
 app.use(helmet());
 app.use(json());
-app.use(CORS);
+app.use(cors());
 app.use(sanitize());
 
 app.use('/health', healthRoutes);
