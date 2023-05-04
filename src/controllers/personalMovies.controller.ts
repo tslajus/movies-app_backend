@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import { Movie } from '../models/movie';
-import { PAGE_SIZE } from '../commons';
 
 const addPersonalMovie = async (req: Request, res: Response) => {
   const errors = validationResult(req);
@@ -17,14 +16,10 @@ const addPersonalMovie = async (req: Request, res: Response) => {
 const getPersonalMovies = async (req: Request, res: Response) => {
   try {
     const userEmail = req.currentUserEmail;
-    const page = parseInt(req.query.page as string) || 1;
 
-    const { docs: movies, totalPages } = await Movie.paginate(
-      { email: userEmail },
-      { offset: (page - 1) * PAGE_SIZE, limit: PAGE_SIZE, sort: { createdAt: -1 } },
-    );
+    const movies = await Movie.find({ email: userEmail }).sort({ createdAt: -1 });
 
-    res.status(200).json({ movies, totalPages });
+    res.status(200).json({ movies });
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
   }
