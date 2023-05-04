@@ -1,18 +1,21 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
 
 import { ValidationChain, validationResult } from 'express-validator';
 
+dotenv.config();
+
 export const PAGE_SIZE = 20;
 
-export const CORS = (_req: express.Request, res: express.Response, next: express.NextFunction): void => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  next();
-};
+export const allowedOrigins = [process.env.ALLOWEDORIGIN1 as string, process.env.ALLOWEDORIGIN2 as string];
 
-export const allowedOrigins = ['http://localhost:3000', 'https://my-movies-app.onrender.com'];
+export const CORS = cors({
+  origin: allowedOrigins,
+  allowedHeaders: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+});
 
 export const validate = (validations: ValidationChain[]) => {
   return async (req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
